@@ -12,6 +12,16 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
+	@all_ratings =  Movie.all_ratings
+	if(params[:ratings])
+		@ratings_checked = params[:ratings] || {}
+	else
+		@ratings_checked = {"G"=>1, "R"=>1, "PG"=>1, "PG-13"=>1}
+	end
+	if(params[:ratings])
+		array_ratings = params[:ratings].collect {|key,value| key }
+		@movies = Movie.where(rating: array_ratings)
+	end
 	sort = params[:sort]
 	session[:sort] = params[:sort]
 	if sort=='title' 
@@ -19,6 +29,8 @@ class MoviesController < ApplicationController
 	elsif sort=='release'
 		@movies = @movies.sort_by{|i| i.release_date.to_s}
 	end
+
+	
   end
 
   def new
