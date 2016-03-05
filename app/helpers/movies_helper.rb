@@ -13,4 +13,10 @@ module MoviesHelper
 	end
 	return nil
   end
+
+  def testChecked?(rating)
+	rating_checked = params[:ratings]
+	return true if rating_checked.nil?
+	rating_checked.include?(rating) 
+  end
 end
