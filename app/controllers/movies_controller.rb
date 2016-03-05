@@ -16,19 +16,20 @@ class MoviesController < ApplicationController
 	if(params[:ratings])
 		@ratings_checked = params[:ratings] || {}
 	else
-		@ratings_checked = {"G"=>1, "R"=>1, "PG"=>1, "PG-13"=>1}
+		#@ratings_checked = {"G"=>1, "R"=>1, "PG"=>1, "PG-13"=>1}
+		params[:ratings] = session[:ratings]
+		@ratings_checked = params[:ratings]||{}
 	end
-	if(params[:ratings])
-		array_ratings = params[:ratings].collect {|key,value| key }
-		@movies = Movie.where(rating: array_ratings)
-	end
+	array_ratings = params[:ratings].collect {|key,value| key }
+	@movies = Movie.where(rating: array_ratings)
 	sort = params[:sort]
-	session[:sort] = params[:sort]
 	if sort=='title' 
 		@movies = @movies.sort_by{|i| i.title}
 	elsif sort=='release'
 		@movies = @movies.sort_by{|i| i.release_date.to_s}
 	end
+	session[:sort] = params[:sort]
+	session[:ratings]=params[:ratings]
 
 	
   end
